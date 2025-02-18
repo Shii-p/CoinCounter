@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduinoデータ受信</title>
+    <script>
+        function fetchData() {
+            fetch("/data_log.txt", { cache: "no-store" })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTPエラー: " + response.status);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById("data").innerText = "センサーデータ:\n" + data;
+            })
+            .catch(error => {
+                console.error("データ取得エラー:", error);
+                document.getElementById("data").innerText = "データ取得エラー: " + error.message;
+            });
+        }
+        setInterval(fetchData, 5000);
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
+    <h1>Arduinoデータ受信</h1>
+    <pre id="data">データ待機中...</pre>
+</body>
+</html>
